@@ -1,0 +1,121 @@
+{#
+/**
+ * @file
+ * Default theme implementation to display a view of unformatted rows.
+ *
+ * Available variables:
+ * - title: The title of this group of rows. May be empty.
+ * - rows: A list of the view's row items.
+ *   - attributes: The row's HTML attributes.
+ *   - content: The row's content.
+ * - view: The view object.
+ * - default_row_class: A flag indicating whether default classes should be
+ *   used on rows.
+ *
+ * @see template_preprocess_views_view_unformatted()
+ *
+ * @ingroup themeable
+ */
+#}
+{% if title %}
+  <h3>{{ title }}</h3>
+{% endif %}
+{% for key, row in rows %}
+  {%
+    set row_classes = [
+      default_row_class ? 'views-row',
+    ]
+  %}
+    {% if loop.first %}
+    <section class="page_banner_section podcast" style="padding-top: 80px; background: url('{{ file_url(row.content['#row']._entity.field_podcast_banner_image.entity.uri.value) }}')">
+    
+      <div class="background-overlay-black"></div>
+        <div class="container content-holder">
+            <div class="row">
+              <div class="col-sm-6">
+                  <div class="content_container">
+                      <p class="page-title"><span>Podcast</span></p>
+                      <h1 class="lead sub-title">{{ row.content['#row']._entity.field_podcast_title.value | striptags }}</h1>
+                      <p class="lead button_link position-relative"><a href="{{ path('entity.node.canonical', {'node': row.content['#row']._entity.id}) }}">{% if row.content['#row']._entity.field_podcast_video.entity.uri.value != '' %}
+                      Watch the full episode {% elseif row.content['#row']._entity.field_podcast_audio_link.value != '' %} Listen to the full episode {% endif %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
+                      </a></p>
+                  </div>
+              </div>  
+              <div class="col-sm-2">
+                <!-- Button trigger modal -->
+                <button type="button" class="slider-play-icon" data-toggle="modal" data-target="#exampleModal">
+                    <div><i class="fa fa-play" aria-hidden="true"></i></div>
+                </button>
+                  <!-- Modal -->
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                  <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                      <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                          <span aria-hidden="true">&times;</span>
+                        </button>
+                      </div>
+                      <div class="modal-body">
+                      {% if row.content['#row']._entity.field_podcast_video.entity.uri.value != '' %}
+                          <video id="services_video" width="100%" controls>
+                            <source src="{{ file_url(row.content['#row']._entity.field_podcast_video.entity.uri.value) }}" type="video/mp4">
+                            Your browser does not support HTML video.
+                          </video>
+                      {% elseif row.content['#row']._entity.field_podcast_audio_link.value != '' %}
+                            <audio controls>
+                                <source src="{{ row.content['#row']._entity.field_podcast_audio_link.value }}" type="audio/ogg">
+                                <source src="{{ row.content['#row']._entity.field_podcast_audio_link.value }}" type="audio/mpeg">
+                                Your browser does not support the audio element.
+                            </audio>
+                      {% endif %}
+                      </div>
+                      
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-sm-4 imane_container podcast_person">
+                <img id="workshop_image" src="{{ file_url(row.content['#row']._entity.field_podcast_person_image.entity.uri.value) }}"/>
+              </div>
+            </div>
+              
+        </div>
+    </section>
+    <section id="mid_section">
+      <div class="container">
+    {% elseif loop.last %}
+            <div class="row single_podcast_box">
+                <div class="col-sm-4 imane_container">
+                    <a href="{{ path('entity.node.canonical', {'node': row.content['#row']._entity.id}) }}">
+                        <img src="{{ file_url(row.content['#row']._entity.field_podcast_thumbnail.entity.uri.value) }}"/>
+                    </a>
+                </div>
+                <div class="col-sm-8 single_podcast_content">
+                    <div id ="single_podcast">
+                    <h3 class="heading"><a href="{{ path('entity.node.canonical', {'node': row.content['#row']._entity.id}) }}">{{ row.content['#row']._entity.field_podcast_title.value | striptags }}</a></h3>
+                    <p class="lead">{{ row.content['#row']._entity.field_short_description.value | striptags }}</p>
+                    <p class="lead sub-title position-relative" style="margin-top: 0;"><a href ="{{ path('entity.node.canonical', {'node': row.content['#row']._entity.id}) }}">{% if row.content['#row']._entity.field_podcast_video.entity.uri.value != '' %}
+                      Watch the full episode {% elseif row.content['#row']._entity.field_podcast_audio_link.value != '' %} Listen to the full episode {% endif %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {% else %}
+            <div class="row single_podcast_box">
+                <div class="col-sm-4 imane_container">
+                    <a href="{{ path('entity.node.canonical', {'node': row.content['#row']._entity.id}) }}">
+                        <img src="{{ file_url(row.content['#row']._entity.field_podcast_thumbnail.entity.uri.value) }}"/>
+                    </a>
+                </div>
+                <div class="col-sm-8 single_podcast_content">
+                    <div id ="single_podcast">
+                    <h3 class="heading"><a href="{{ path('entity.node.canonical', {'node': row.content['#row']._entity.id}) }}">{{ row.content['#row']._entity.field_podcast_title.value | striptags }}</a></h3>
+                    <p class="lead">{{ row.content['#row']._entity.field_short_description.value | striptags }}</p>
+                    <p class="lead sub-title position-relative" style="margin-top: 0;"><a href ="{{ path('entity.node.canonical', {'node': row.content['#row']._entity.id}) }}">{% if row.content['#row']._entity.field_podcast_video.entity.uri.value != '' %}
+                      Watch the full episode {% elseif row.content['#row']._entity.field_podcast_audio_link.value != '' %} Listen to the full episode {% endif %} <i class="fa fa-long-arrow-right" aria-hidden="true"></i></a></p>
+                    </div>
+                </div>
+            </div>
+    {% endif %}
+{% endfor %}
